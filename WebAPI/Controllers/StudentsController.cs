@@ -15,12 +15,29 @@ namespace WebAPI.Controllers
             new Student { Indeks="PR3/2019", FirstName = "Marko", LastName="Markovic", StudyYear=3 },
             new Student { Indeks="PR4/2019", FirstName = "Milorad", LastName="Miloradovic", StudyYear=4 }};
 
+        private static int counter;
+
+        [HttpGet("count")]
+        public ActionResult GetCount()
+        {
+            ++counter;
+            try
+            {
+                return Ok(counter);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Error = ex.Message });
+            }
+        }
+
 
         //  CRUD OPERATIONS
 
         [HttpPost("upload")]
         public ActionResult Upload([FromBody] Student student)
         {
+            ++counter;
             try
             {
                 if (students.Any(x => x.Indeks == student.Indeks))
@@ -40,6 +57,7 @@ namespace WebAPI.Controllers
         [HttpGet("all")]
         public ActionResult GetAll()
         {
+            ++counter;
             try
             {
                 return Ok(new { Studenst = students });
@@ -53,6 +71,7 @@ namespace WebAPI.Controllers
         [HttpPut("update")]
         public ActionResult Update([FromBody] Student student)
         {
+            ++counter;
             try
             {
                 if (students.Any(x => x.Indeks == student.Indeks))
@@ -75,6 +94,7 @@ namespace WebAPI.Controllers
         [HttpDelete("delete-by-indeks/{indeks}")]
         public ActionResult DeleetByIndeks(string indeks)
         {
+            ++counter;
             try
             {
                 if (students.Any(x => x.Indeks == indeks))
