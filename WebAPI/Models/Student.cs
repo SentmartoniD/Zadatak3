@@ -8,6 +8,6 @@
 
         public string LastName { get; set; }
 
-        public int studyYear { get; set; }
+        public int StudyYear { get; set; }
     }
 }
