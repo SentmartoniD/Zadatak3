@@ -15,6 +15,7 @@ namespace WebAPI.Controllers
             new Student { Indeks="PR3/2019", FirstName = "Marko", LastName="Markovic", StudyYear=3 },
             new Student { Indeks="PR4/2019", FirstName = "Milorad", LastName="Miloradovic", StudyYear=4 }};
 
+        // COUNTER FOR THE REQUESTS
         private static int counter;
 
         [HttpGet("count")]
