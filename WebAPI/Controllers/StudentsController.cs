@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Eventing.Reader;
 using WebAPI.Models;
 
 namespace WebAPI.Controllers
@@ -9,10 +10,10 @@ namespace WebAPI.Controllers
     public class StudentsController : ControllerBase
     {
         private static List<Student> students = new List<Student>() {
-            new Student { Indeks="PR1/2019", FirstName = "Milan", LastName="Milanovic", StudyYear=3 },
-            new Student { Indeks="PR2/2019", FirstName = "Milos", LastName="Milosevic", StudyYear=3 },
+            new Student { Indeks="PR1/2019", FirstName = "Milan", LastName="Milanovic", StudyYear=1 },
+            new Student { Indeks="PR2/2019", FirstName = "Milos", LastName="Milosevic", StudyYear=2 },
             new Student { Indeks="PR3/2019", FirstName = "Marko", LastName="Markovic", StudyYear=3 },
-            new Student { Indeks="PR4/2019", FirstName = "Milorad", LastName="Miloradovic", StudyYear=3 }};
+            new Student { Indeks="PR4/2019", FirstName = "Milorad", LastName="Miloradovic", StudyYear=4 }};
 
 
         //  CRUD OPERATIONS
@@ -20,9 +21,15 @@ namespace WebAPI.Controllers
         [HttpPost("upload")]
         public ActionResult Upload([FromBody] Student student)
         {
-            try {
-                students.Add(student);
-                return Ok(new { Message = "Successful upload!" });
+            try
+            {
+                if (students.Any(x => x.Indeks == student.Indeks))
+                    return BadRequest(new { Error = "Student with that indeks already exist!" });
+                else
+                {
+                    students.Add(student);
+                    return Ok(new { Message = "Successful upload!" });
+                }
             }
             catch (Exception ex)
             {
@@ -64,8 +71,8 @@ namespace WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Error = ex.Message });
             }
         }
-
-        [HttpDelete("{indeks:string}")]
+        
+        [HttpDelete("delete-by-indeks/{indeks}")]
         public ActionResult DeleetByIndeks(string indeks)
         {
             try
