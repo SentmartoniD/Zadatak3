@@ -65,5 +65,24 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpDelete("{indeks:string}")]
+        public ActionResult DeleetByIndeks(string indeks)
+        {
+            try
+            {
+                if (students.Any(x => x.Indeks == indeks))
+                {
+                    students.RemoveAll(x => x.Indeks == indeks);
+                    return Ok(new { Message = $"Successfuly deleted student with indeks:{indeks}!" });
+                }
+                else
+                    return BadRequest(new { Error = "Student with that indeks doesnt exist!" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Error = ex.Message });
+            }
+        }
+
     }
 }
