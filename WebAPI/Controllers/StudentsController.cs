@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics.Eventing.Reader;
 using WebAPI.Models;
 
@@ -15,13 +16,16 @@ namespace WebAPI.Controllers
             new Student { Indeks="PR3/2019", FirstName = "Marko", LastName="Markovic", StudyYear=3 },
             new Student { Indeks="PR4/2019", FirstName = "Milorad", LastName="Miloradovic", StudyYear=4 }};
 
+        // COUNTER FOR INCOMING HTTP REQUESTS
+        public static int requestCounter = 0;
 
         [HttpGet("count")]
         public ActionResult GetCount()
         {
             try
             {
-                return Ok();
+                requestCounter++;
+                return Ok(requestCounter);
             }
             catch (Exception ex)
             {
@@ -37,6 +41,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+                requestCounter++;
                 if (students.Any(x => x.Indeks == student.Indeks))
                     return BadRequest(new { Error = "Student with that indeks already exist!" });
                 else
@@ -51,11 +56,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("all")]
+        [HttpGet("students")]
         public ActionResult GetAll()
         {
             try
             {
+                requestCounter++;
                 return Ok(new { Studenst = students });
             }
             catch (Exception ex)
@@ -69,6 +75,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+                requestCounter++;
                 if (students.Any(x => x.Indeks == student.Indeks))
                 {
                     Student s = students.FirstOrDefault(x => x.Indeks == student.Indeks);
@@ -86,11 +93,12 @@ namespace WebAPI.Controllers
             }
         }
         
-        [HttpDelete("delete-by-indeks/{indeks}")]
+        [HttpDelete("{indeks}")]
         public ActionResult DeleetByIndeks(string indeks)
         {
             try
             {
+                requestCounter++;
                 if (students.Any(x => x.Indeks == indeks))
                 {
                     students.RemoveAll(x => x.Indeks == indeks);
